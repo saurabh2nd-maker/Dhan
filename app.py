@@ -12,6 +12,7 @@ client_id = os.getenv('CLIENT_ID')
 
 BOT_TOKEN2 = os.getenv('BOT_TOKEN2')
 CHAT_ID2 = os.getenv('CHAT_ID2')
+GROUP_CHAT_ID = os.getenv('GROUP_CHAT_ID')
 
 # print(ACCESS_TOKEN)
 # print(BOT_TOKEN)
@@ -26,7 +27,7 @@ HEADERS = {
     'Content-Type': 'application/json'
 }
 
-daily_trading_quantity = 780
+daily_trading_quantity = 1560
 daily_sl = -15500
 
 
@@ -48,15 +49,15 @@ last_notification = None
 last_notification2 = None
 last_sent_hour = -1
 
-def is_after_8am_ist():
+def is_after_9am_ist():
     ist = pytz.timezone('Asia/Kolkata')
     now_ist = datetime.now(ist)
-    return now_ist.hour >= 8
+    return now_ist.hour >= 9
 
 def is_after_3pm_ist():
     ist = pytz.timezone('Asia/Kolkata')
     now_ist = datetime.now(ist)
-    return now_ist.hour >= 15
+    return now_ist.hour >= 14.5
 
 
 def is_trading_day():
@@ -65,7 +66,17 @@ def is_trading_day():
     # 0 = Monday, ..., 6 = Sunday
     return weekday < 5  # True for Monday to Friday
 
-
+def send_msg_to_group(msg):
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    payload = {
+        'chat_id': GROUP_CHAT_ID,
+        'text': msg
+    }
+    r = requests.post(url, data=payload)
+    if r.status_code == 200:
+        print("")
+    else:
+        print("Failed to send message:", r.text)
 
 
 def send_telegram_message(message):
@@ -360,7 +371,7 @@ while True:
     
 
     if (is_trading_day() == False):
-        if(last_notification != today and is_after_8am_ist()):
+        if(last_notification != today and is_after_9am_ist()):
             print("Not a trading day ENJOY")
             last_notification = today
             send_telegram_message("Not a trading day ENJOY")
@@ -381,14 +392,15 @@ while True:
         send_telegram_message("Error to featch daily PNL")
         continue
 
-    if(last_notification2 != today and is_after_8am_ist()):
+    if(last_notification2 != today and is_after_9am_ist()):
         send_telegram_message(f"\n\n Welcome to Magical World \n   1 — 𝕋𝕣𝕒𝕕𝕖 𝕔𝕙𝕠𝕠𝕥 𝕛𝕒𝕪𝕒 𝕔𝕙𝕒𝕝𝕖𝕘𝕒, 𝕝𝕖𝕜𝕚𝕟 𝔽𝕆𝕄𝕆 𝕖𝕟𝕥𝕣𝕪 𝕟𝕙𝕚 𝕝𝕖𝕟𝕚 𝕙. \n 2 — 𝕋𝕒𝕜𝕖 𝕥𝕣𝕒𝕕𝕖 𝕠𝕟𝕝𝕪 𝕨𝕙𝕖𝕟 𝟚𝟘 𝔼𝕄𝔸 𝕓𝕣𝕖𝕒𝕜𝕤.  \n\n")
         send_telegram_message(f"\n\n You are allowed for below: \n 1 -  Total Quantity: {daily_trading_quantity} \n Per Day SL: {daily_sl}\n\n")
         last_notification2 = today
 
 
     if(last_notification != today and is_after_3pm_ist()):
-        send_telegram_message(f"\n\nTrade Summary: \n Total PNL: {todays_pnl} \n Total trade: {c} \n Total QTY: {total_sellQTY} \n\n")
+        send_telegram_message(f"\n\nTrade Summary: \n\n Date:                                  {today} \n Total PNL:                        {todays_pnl} \n Total order(Buy + sell):   {c} \n Total QTY traded:            {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
+        send_msg_to_group(f"\n\n My Trade Summary: \n\n Date:                                 {today} \n Total PNL:                        {todays_pnl} \n Total order(Buy + Sell):  {c} \n Total QTY traded:            {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
         last_notification = today
 
     if(todays_pnl >= 10000 and last_profit_day != today):
@@ -403,10 +415,10 @@ while True:
         send_telegram_message("⚠️ Profit Alert: You are in Green from RED. Consider reviewing your trades.")
         flag = 1
 
-    print("Total trades executed today:" , c)
+    print("Total orders executed today:" , c)
     print("Today PNL:" , todays_pnl )
     print("Total Quantity Traded:" , total_sellQTY)
-    if(is_after_8am_ist() and last_deactivated_date != today):
+    if(is_after_9am_ist() and last_deactivated_date != today):
         print("Eligible for deactivation")
         if(total_sellQTY >= daily_trading_quantity or todays_pnl < daily_sl):
             print("All Coditions are True for diactivation")
@@ -445,6 +457,7 @@ while True:
                 count = 1
                 last_deactivated_date = today
                 send_telegram_message("Kill Switch activated for the day \n 𝓔𝓷𝓳𝓸𝔂 𝓣𝓱𝓮 𝓓𝓪𝔂")
+                send_msg_to_group(f"\n\n My Trade Summary: \n\n Date:                                 {today} \n Total PNL:                        {todays_pnl} \n Total order(Buy + Sell):  {c} \n Total QTY traded:            {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
 
                 
                 
