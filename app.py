@@ -57,7 +57,7 @@ def is_after_9am_ist():
 def is_after_3pm_ist():
     ist = pytz.timezone('Asia/Kolkata')
     now_ist = datetime.now(ist)
-    return now_ist.hour >= 14.5
+    return now_ist.hour >= 14.75
 
 
 def is_trading_day():
@@ -398,7 +398,7 @@ while True:
         last_notification2 = today
 
 
-    if(last_notification != today and is_after_3pm_ist()):
+    if(last_notification != today or is_after_3pm_ist()):
         send_telegram_message(f"\n\nTrade Summary: \n\n Date:                                  {today} \n Total PNL:                        {todays_pnl} \n Total order(Buy + sell):   {c} \n Total QTY traded:            {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
         send_msg_to_group(f"\n\n My Trade Summary: \n\n Date:                                 {today} \n Total PNL:                        {todays_pnl} \n Total order(Buy + Sell):  {c} \n Total QTY traded:            {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
         last_notification = today
@@ -457,8 +457,6 @@ while True:
                 count = 1
                 last_deactivated_date = today
                 send_telegram_message("Kill Switch activated for the day \n 𝓔𝓷𝓳𝓸𝔂 𝓣𝓱𝓮 𝓓𝓪𝔂")
-                send_msg_to_group(f"\n\n My Trade Summary: \n\n Date:                                 {today} \n Total PNL:                        {todays_pnl} \n Total order(Buy + Sell):  {c} \n Total QTY traded:            {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
-
                 
                 
                 
