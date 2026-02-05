@@ -5,13 +5,13 @@ from datetime import datetime
 import pytz
 from dhanhq import dhanhq
 
-ACCESS_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkaGFuIiwicGFydG5lcklkIjoiIiwiZXhwIjoxNzcwMzE4MTkwLCJpYXQiOjE3NzAyMzE3OTAsInRva2VuQ29uc3VtZXJUeXBlIjoiU0VMRiIsIndlYmhvb2tVcmwiOiIiLCJkaGFuQ2xpZW50SWQiOiIxMTAzODQyNTEyIn0.ibk2ENLn30d8vcuwn3CrmFl5c0t_DogXVuBe88cf40d93MYcNVuJd0SeZtriblcfM85SvdN_8c8qwWJEnxHUOg'
-BOT_TOKEN = "7636078690:AAG2vq4Ler0TTnDewrNQfXiX6CSLFzZZMok"
-CHAT_ID = "922195607"
-client_id = "1103842512"
+ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
+BOT_TOKEN = os.getenv('BOT_TOKEN')
+CHAT_ID = os.getenv('CHAT_ID')
+client_id = os.getenv('CLIENT_ID')
 
-BOT_TOKEN2 = "7938821634:AAGJHm9wuzDZMjHgOYv2e4OYMDloPWboXhI"
-CHAT_ID2 = "922195607"
+BOT_TOKEN2 = os.getenv('BOT_TOKEN2')
+CHAT_ID2 = os.getenv('CHAT_ID2')
 
 # print(ACCESS_TOKEN)
 # print(BOT_TOKEN)
