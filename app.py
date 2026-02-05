@@ -5,8 +5,6 @@ from datetime import datetime
 import pytz
 from dhanhq import dhanhq
 
-time.sleep(5)
-
 ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 CHAT_ID = os.getenv('CHAT_ID')
@@ -27,7 +25,9 @@ HEADERS = {
     'access-token': ACCESS_TOKEN,
     'Content-Type': 'application/json'
 }
- 
+
+daily_trading_quantity = 780
+daily_sl = -15500
 
 
 dhan = dhanhq(client_id , ACCESS_TOKEN)  # 
@@ -368,9 +368,6 @@ while True:
         continue
 
     print("***************************************************************************")
-    print(client_id, ACCESS_TOKEN)
-    print("ALL VARS:", os.environ.keys())
-    print("ACCESS_TOKEN:", os.getenv("ACCESS_TOKEN"))
     
     time.sleep(2)
     c = get_today_trade_count()
@@ -378,39 +375,40 @@ while True:
         send_telegram_message(f"Error in fetching trade Count")
         continue
 
-    p = get_daily_pnl()
-    if (p == None):
+    todays_pnl = get_daily_pnl()
+    if (todays_pnl == None):
         print("Error to featch daily_pnl")
         send_telegram_message("Error to featch daily PNL")
         continue
 
     if(last_notification2 != today and is_after_8am_ist()):
-        send_telegram_message(f"\n\n Welcome to Magical World \n   1 — 𝕋𝕣𝕒𝕕𝕖 𝕔𝕙𝕠𝕡𝕠𝕥 𝕛𝕒𝕪𝕒 𝕔𝕙𝕒𝕝𝕖𝕘𝕒, 𝕝𝕖𝕜𝕚𝕟 𝔽𝕆𝕄𝕆 𝕖𝕟𝕥𝕣𝕪 𝕟𝕙𝕚 𝕝𝕖𝕟𝕚 𝕙. \n 2 — 𝕋𝕒𝕜𝕖 𝕥𝕣𝕒𝕕𝕖 𝕠𝕟𝕝𝕪 𝕨𝕙𝕖𝕟 𝟚𝟘 𝔼𝕄𝔸 𝕓𝕣𝕖𝕒𝕜𝕤.  \n\n")
+        send_telegram_message(f"\n\n Welcome to Magical World \n   1 — 𝕋𝕣𝕒𝕕𝕖 𝕔𝕙𝕠𝕠𝕥 𝕛𝕒𝕪𝕒 𝕔𝕙𝕒𝕝𝕖𝕘𝕒, 𝕝𝕖𝕜𝕚𝕟 𝔽𝕆𝕄𝕆 𝕖𝕟𝕥𝕣𝕪 𝕟𝕙𝕚 𝕝𝕖𝕟𝕚 𝕙. \n 2 — 𝕋𝕒𝕜𝕖 𝕥𝕣𝕒𝕕𝕖 𝕠𝕟𝕝𝕪 𝕨𝕙𝕖𝕟 𝟚𝟘 𝔼𝕄𝔸 𝕓𝕣𝕖𝕒𝕜𝕤.  \n\n")
+        send_telegram_message(f"\n\n You are allowed for below: \n 1 -  Total Quantity: {daily_trading_quantity} \n Per Day SL: {daily_sl}\n\n")
         last_notification2 = today
 
 
     if(last_notification != today and is_after_3pm_ist()):
-        send_telegram_message(f"\n\nTrade Summary: \n Total PNL: {p} \n Total trade: {c} \n Total QTY: {total_sellQTY} \n\n")
+        send_telegram_message(f"\n\nTrade Summary: \n Total PNL: {todays_pnl} \n Total trade: {c} \n Total QTY: {total_sellQTY} \n\n")
         last_notification = today
 
-    if(p >= 3000 and last_profit_day != today):
-        send_telegram_message("⚠️ Good Job:  ₹3️⃣0️⃣0️⃣0️⃣ Profit. ")
+    if(todays_pnl >= 10000 and last_profit_day != today):
+        send_telegram_message("⚠️ Good Job:  ₹1️⃣0️⃣,0️⃣0️⃣0️⃣Profit. ")
         last_profit_day = today
         
 
-    if(p <= -3000 and flag == 1):
-        send_telegram_message("⚠️ Loss Alert: ₹3️⃣0️⃣0️⃣0️⃣ loss hit. Consider reviewing your trades.")
+    if(todays_pnl <= -3000 and flag == 1):
+        send_telegram_message("⚠️ Loss Alert: ₹1️⃣0️⃣,0️⃣0️⃣0️⃣ loss hit. Consider reviewing your trades.")
         flag = 0
-    if(flag == 0 and p > 0):
+    if(flag == 0 and todays_pnl > 0):
         send_telegram_message("⚠️ Profit Alert: You are in Green from RED. Consider reviewing your trades.")
         flag = 1
 
     print("Total trades executed today:" , c)
-    print("Today PNL:" , p )
+    print("Today PNL:" , todays_pnl )
     print("Total Quantity Traded:" , total_sellQTY)
     if(is_after_8am_ist() and last_deactivated_date != today):
         print("Eligible for deactivation")
-        if(total_sellQTY >= 45000 or p < -7600):
+        if(total_sellQTY >= daily_trading_quantity or todays_pnl < daily_sl):
             print("All Coditions are True for diactivation")
             if(count ==2):
                 
