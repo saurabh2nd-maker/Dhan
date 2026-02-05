@@ -367,6 +367,8 @@ while True:
 
     print("***************************************************************************")
     print(client_id, ACCESS_TOKEN)
+    print("ALL VARS:", os.environ.keys())
+    print("ACCESS_TOKEN:", os.getenv("ACCESS_TOKEN"))
     
     time.sleep(2)
     c = get_today_trade_count()
