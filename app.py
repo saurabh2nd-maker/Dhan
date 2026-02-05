@@ -399,8 +399,8 @@ while True:
 
 
     if(last_notification != today or is_after_3pm_ist()):
-        send_telegram_message(f"\n\nTrade Summary: \n\n Date:                                  {today} \n Total PNL:                        {todays_pnl} \n Total order(Buy + sell):   {c} \n Total QTY traded:            {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
-        send_msg_to_group(f"\n\n My Trade Summary: \n\n Date:                                 {today} \n Total PNL:                        {todays_pnl} \n Total order(Buy + Sell):  {c} \n Total QTY traded:            {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
+        send_telegram_message(f"\n\nTrade Summary: \n\n Date:  {today} \n Total PNL:  {todays_pnl} \n Total order(Buy + sell):  {c} \n Total QTY traded:  {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
+        send_msg_to_group(f"\n\n My Trade Summary: \n\n Date:  {today} \n Total PNL:  {todays_pnl} \n Total order(Buy + Sell):  {c} \n Total QTY traded:  {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
         last_notification = today
 
     if(todays_pnl >= 10000 and last_profit_day != today):
