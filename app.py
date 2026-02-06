@@ -58,7 +58,13 @@ def is_after_3pm_ist():
     ist = pytz.timezone('Asia/Kolkata')
     now_ist = datetime.now(ist)
     current_time = now_ist.hour + now_ist.minute / 60
-    return now_ist.hour >= 14.75
+    return current_time >= 14.75
+
+def is_before_3_30pm_ist():
+    ist = pytz.timezone('Asia/Kolkata')
+    now_ist = datetime.now(ist)
+    current_time = now_ist.hour + now_ist.minute / 60
+    return current_time <= 15.50
 
 
 def is_trading_day():
@@ -332,9 +338,11 @@ def cancel_pending_orders():
         if(not orders.get('data')):
             print("No Pending Orders")
 
+        is_pending = 0
         for order in orders.get('data'):
             print(order['orderStatus'])
             if order.get("orderStatus") == "PENDING":
+                is_pending = 1
                 order_id = order.get("orderId")
                 print(f"Cancelling order: {order_id}")
                 response = dhan.cancel_order(order_id)
@@ -343,6 +351,9 @@ def cancel_pending_orders():
                     #send_telegram_message("Error In Closing the pending orders")
                 print(f"Response: {response}")
                 send_telegram_message(f"Cancelled Pending Order: {response}")
+        if(is_pending == 0):
+            print("No Pending Orders..")
+            send_telegram_message("No Pending Orders..")
         
     except Exception:
         return 'failed'
@@ -376,6 +387,7 @@ while True:
             print("Not a trading day ENJOY")
             last_notification = today
             send_telegram_message("Not a trading day ENJOY")
+            send_msg_to_group(f"Hello,\n Today Is Not A Trading Day\n\n 𝓔𝓷𝓳𝓸𝔂 𝓣𝓱𝓮 𝓓𝓪𝔂")
         time.sleep(3600)
         continue
 
@@ -393,13 +405,15 @@ while True:
         send_telegram_message("Error to featch daily PNL")
         continue
 
-    if(last_notification2 != today and is_after_9am_ist()):
-        send_telegram_message(f"\n\n Welcome to Magical World \n   1 — 𝕋𝕣𝕒𝕕𝕖 𝕔𝕙𝕠𝕠𝕥 𝕛𝕒𝕪𝕒 𝕔𝕙𝕒𝕝𝕖𝕘𝕒, 𝕝𝕖𝕜𝕚𝕟 𝔽𝕆𝕄𝕆 𝕖𝕟𝕥𝕣𝕪 𝕟𝕙𝕚 𝕝𝕖𝕟𝕚 𝕙. \n 2 — 𝕋𝕒𝕜𝕖 𝕥𝕣𝕒𝕕𝕖 𝕠𝕟𝕝𝕪 𝕨𝕙𝕖𝕟 𝟚𝟘 𝔼𝕄𝔸 𝕓𝕣𝕖𝕒𝕜𝕤.  \n\n")
+    if(last_notification2 != today and is_after_9am_ist() and is_before_3_30pm_ist()):
+        send_telegram_message(f"\n\n Welcome to Magical World \n   1 — 𝕋𝕣𝕒𝕕𝕖 𝕔𝕙𝕠𝕠𝕥 𝕛𝕒𝕪𝕖 𝕔𝕙𝕒𝕝𝕖𝕘𝕒, 𝕝𝕖𝕜𝕚𝕟 𝔽𝕆𝕄𝕆 𝕖𝕟𝕥𝕣𝕪 𝕟𝕙𝕚 𝕝𝕖𝕟𝕚 𝕙. \n 2 — 𝕋𝕒𝕜𝕖 𝕥𝕣𝕒𝕕𝕖 𝕠𝕟𝕝𝕪 𝕨𝕙𝕖𝕟 𝟚𝟘 𝔼𝕄𝔸 𝕓𝕣𝕖𝕒𝕜𝕤.  \n\n")
         send_telegram_message(f"\n\n You are allowed for below: \n 1 -  Total Quantity: {daily_trading_quantity} \n Per Day SL: {daily_sl}\n\n")
+        send_msg_to_group(f"\n\n Hello Traders,\n Good Morning.. \n\n Always Remember:\n  — 𝕋𝕣𝕒𝕕𝕖 𝕔𝕙𝕠𝕠𝕥 𝕛𝕒𝕪𝕖 𝕔𝕙𝕒𝕝𝕖𝕘𝕒, 𝕝𝕖𝕜𝕚𝕟 𝔽𝕆𝕄𝕆 𝕖𝕟𝕥𝕣𝕪 𝕟𝕙𝕚 𝕝𝕖𝕟𝕚 𝕙.")
+
         last_notification2 = today
 
 
-    if(last_notification != today and is_after_3pm_ist()):
+    if(last_notification != today and is_after_3pm_ist() and is_before_3_30pm_ist()):
         send_telegram_message(f"\n\nTrade Summary: \n\n Date:  {today} \n Index:  Nifty \n Total PNL:  {todays_pnl} \n Total order(Buy + sell):  {c} \n Total QTY traded:  {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
         send_msg_to_group(f"\n\n My Trade Summary: \n\n Date:  {today} \n Index:  Nifty \n Total PNL:  {todays_pnl} \n Total order(Buy + Sell):  {c} \n Total QTY traded:  {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
         last_notification = today
