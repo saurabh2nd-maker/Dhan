@@ -28,7 +28,7 @@ HEADERS = {
 }
 
 daily_trading_quantity = 1560
-daily_sl = -15500
+daily_sl = -15000
 
 
 dhan = dhanhq(client_id , ACCESS_TOKEN)  # 
@@ -423,7 +423,7 @@ while True:
         last_profit_day = today
         
 
-    if(todays_pnl <= -3000 and flag == 1):
+    if(todays_pnl <= -10000 and flag == 1):
         send_telegram_message("⚠️ Loss Alert: ₹1️⃣0️⃣,0️⃣0️⃣0️⃣ loss hit. Consider reviewing your trades.")
         flag = 0
     if(flag == 0 and todays_pnl > 0):
@@ -435,9 +435,9 @@ while True:
     print("Total Quantity Traded:" , total_sellQTY)
     if(is_after_9am_ist() and last_deactivated_date != today):
         print("Eligible for deactivation")
-        if(total_sellQTY >= daily_trading_quantity or todays_pnl < daily_sl):
+        if(total_sellQTY >= daily_trading_quantity or todays_pnl <= daily_sl):
             print("All Coditions are True for diactivation")
-            if(count ==2):
+            if(count ==1):
                 
                 #print("Activated")
                 r = cancel_pending_orders()
