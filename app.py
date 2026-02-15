@@ -69,7 +69,7 @@ def is_before_3_30pm_ist():
 def is_before_10am_ist():
     ist = pytz.timezone('Asia/Kolkata')
     now_ist = datetime.now(ist)
-    return now_ist <= 10
+    return now_ist.hour <= 10
 
 
 def is_trading_day():
