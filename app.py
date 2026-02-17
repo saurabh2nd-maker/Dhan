@@ -27,7 +27,7 @@ HEADERS = {
     'Content-Type': 'application/json'
 }
 
-daily_trading_quantity = 1560
+daily_trading_quantity = 780
 daily_sl = -15000
 
 
