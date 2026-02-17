@@ -477,6 +477,9 @@ while True:
                 count = 1
                 last_deactivated_date = today
                 send_telegram_message("Kill Switch activated for the day \n 𝓔𝓷𝓳𝓸𝔂 𝓣𝓱𝓮 𝓓𝓪𝔂")
+                send_telegram_message(f"\n\nTrade Summary: \n\n Date:  {today} \n Index:  Nifty \n Total PNL:  {todays_pnl} \n Total order(Buy + sell):  {c} \n Total QTY traded:  {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
+                #send_msg_to_group(f"\n\n My Trade Summary: \n\n Date:  {today} \n Index:  Nifty \n Total PNL:  {todays_pnl} \n Total order(Buy + Sell):  {c} \n Total QTY traded:  {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
+                last_notification2 = today
                 
                 
                 
