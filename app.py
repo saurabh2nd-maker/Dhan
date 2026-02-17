@@ -103,6 +103,11 @@ def send_telegram_message(message):
     else:
         print("Failed to send message:", r.text)
 
+def send_summary(today, todays_pnl, c, total_sellQTY):
+        send_telegram_message(f"\n\nTrade Summary: \n\n Date:  {today} \n Index:  Nifty \n Total PNL:  {todays_pnl} \n Total order(Buy + sell):  {c} \n Total QTY traded:  {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
+        send_msg_to_group(f"\n\n My Trade Summary: \n\n Date:  {today} \n Index:  Nifty \n Total PNL:  {todays_pnl} \n Total order(Buy + Sell):  {c} \n Total QTY traded:  {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
+
+
 def health_chech_message(message):
     url = f"https://api.telegram.org/bot{BOT_TOKEN2}/sendMessage"
     payload = {
@@ -419,8 +424,7 @@ while True:
 
 
     if(last_notification != today and is_after_3pm_ist() and is_before_3_30pm_ist()):
-        send_telegram_message(f"\n\nTrade Summary: \n\n Date:  {today} \n Index:  Nifty \n Total PNL:  {todays_pnl} \n Total order(Buy + sell):  {c} \n Total QTY traded:  {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
-        send_msg_to_group(f"\n\n My Trade Summary: \n\n Date:  {today} \n Index:  Nifty \n Total PNL:  {todays_pnl} \n Total order(Buy + Sell):  {c} \n Total QTY traded:  {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
+        send_summary(today, todays_pnl, c, total_sellQTY)
         last_notification = today
 
     if(todays_pnl >= 10000 and last_profit_day != today):
@@ -476,11 +480,10 @@ while True:
                 enable_kill_switch()
                 count = 1
                 last_deactivated_date = today
+                send_telegram_message("Kill Switch activated for the day \n 𝓔𝓷𝓳𝓸𝔂 𝓣𝓱𝓮 𝓓𝓪𝔂")
 
                 if(last_notification != today and is_after_9am_ist() and is_before_3_30pm_ist()):
-                    send_telegram_message("Kill Switch activated for the day \n 𝓔𝓷𝓳𝓸𝔂 𝓣𝓱𝓮 𝓓𝓪𝔂")
-                    send_telegram_message(f"\n\nTrade Summary: \n\n Date:  {today} \n Index:  Nifty \n Total PNL:  {todays_pnl} \n Total order(Buy + sell):  {c} \n Total QTY traded:  {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
-                    #send_msg_to_group(f"\n\n My Trade Summary: \n\n Date:  {today} \n Index:  Nifty \n Total PNL:  {todays_pnl} \n Total order(Buy + Sell):  {c} \n Total QTY traded:  {total_sellQTY} \n\n DONE — FOR THE DAY ✅. \n\n")
+                    send_summary(today, todays_pnl, c, total_sellQTY)
                     last_notification = today
                 
                 
