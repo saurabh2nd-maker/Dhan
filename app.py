@@ -27,8 +27,8 @@ HEADERS = {
     'Content-Type': 'application/json'
 }
 
-daily_trading_quantity = 780
-daily_sl = -15000
+daily_trading_quantity = 520
+daily_sl = -10000
 
 
 dhan = dhanhq(client_id , ACCESS_TOKEN)  # 
@@ -79,16 +79,17 @@ def is_trading_day():
     return weekday < 5  # True for Monday to Friday
 
 def send_msg_to_group(msg):
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    payload = {
-        'chat_id': GROUP_CHAT_ID,
-        'text': msg
-    }
-    r = requests.post(url, data=payload)
-    if r.status_code == 200:
-        print("")
-    else:
-        print("Failed to send message:", r.text)
+    # url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    # payload = {
+    #     'chat_id': GROUP_CHAT_ID,
+    #     'text': msg
+    # }
+    # r = requests.post(url, data=payload)
+    # if r.status_code == 200:
+    #     print("")
+    # else:
+    #     print("Failed to send message:", r.text)
+    print("Currently not sending msg to group")
 
 
 def send_telegram_message(message):
