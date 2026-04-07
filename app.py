@@ -37,7 +37,7 @@ dhan = dhanhq(client_id , ACCESS_TOKEN)  #
 total_sellQTY = 0 
 count = 1
 
-
+#test
 
 ist = pytz.timezone('Asia/Kolkata')
 today = datetime.now(ist).date()
